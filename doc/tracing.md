@@ -1,10 +1,6 @@
 # User-space, Statically Defined Tracing (USDT) for Bitcoin Core
 
-Bitcoin Core includes statically defined tracepoints to allow for more
-observability during development, debugging, code review, and production usage.
-These tracepoints make it possible to keep track of custom statistics and
-enable detailed monitoring of otherwise hidden internals. They have
-little to no performance impact when unused.
+Bitcoin Core includes statically defined tracepoints to allow for more observability during development, debugging, code review, and production usage. These tracepoints make it possible to keep track of custom statistics and enable detailed monitoring of otherwise hidden internals. They have little to no performance impact when unused.
 
 ```
 eBPF and USDT Overview
@@ -33,21 +29,9 @@ eBPF and USDT Overview
 4. The eBPF program processes the arguments and returns data to the tracing script
 ```
 
-The Linux kernel can hook into the tracepoints during runtime and pass data to
-sandboxed [eBPF] programs running in the kernel. These eBPF programs can, for
-example, collect statistics or pass data back to user-space scripts for further
-processing.
+The Linux kernel can hook into the tracepoints during runtime and pass data to sandboxed [eBPF](https://ebpf.io/) programs running in the kernel. These eBPF programs can, for example, collect statistics or pass data back to user-space scripts for further processing.
 
-[eBPF]: https://ebpf.io/
-
-The two main eBPF front-ends with support for USDT are [bpftrace] and
-[BPF Compiler Collection (BCC)]. BCC is used for complex tools and daemons and
-`bpftrace` is preferred for one-liners and shorter scripts. Examples for both can
-be found in [contrib/tracing].
-
-[bpftrace]: https://github.com/iovisor/bpftrace
-[BPF Compiler Collection (BCC)]: https://github.com/iovisor/bcc
-[contrib/tracing]: ../contrib/tracing/
+The two main eBPF front-ends with support for USDT are [bpftrace](https://github.com/iovisor/bpftrace) and [BPF Compiler Collection (BCC)](https://github.com/iovisor/bcc). BCC is used for complex tools and daemons and `bpftrace` is preferred for one-liners and shorter scripts. Examples for both can be found in [contrib/tracing](../contrib/tracing/).
 
 ## Tracepoint documentation
 
@@ -57,10 +41,10 @@ The currently available tracepoints are listed here.
 
 #### Tracepoint `net:inbound_message`
 
-Is called when a message is received from a peer over the P2P network. Passes
-information about our peer, the connection and the message as arguments.
+Is called when a message is received from a peer over the P2P network. Passes information about our peer, the connection and the message as arguments.
 
 Arguments passed:
+
 1. Peer ID as `int64`
 2. Peer Address and Port (IPv4, IPv6, Tor v3, I2P, ...) as `pointer to C-style String` (max. length 68 characters)
 3. Connection Type (inbound, feeler, outbound-full-relay, ...) as `pointer to C-style String` (max. length 20 characters)
@@ -68,18 +52,14 @@ Arguments passed:
 5. Message Size in bytes as `uint64`
 6. Message Bytes as `pointer to unsigned chars` (i.e. bytes)
 
-Note: The message is passed to the tracepoint in full, however, due to space
-limitations in the eBPF kernel VM it might not be possible to pass the message
-to user-space in full. Messages longer than a 32kb might be cut off. This can
-be detected in tracing scripts by comparing the message size to the length of
-the passed message.
+Note: The message is passed to the tracepoint in full, however, due to space limitations in the eBPF kernel VM it might not be possible to pass the message to user-space in full. Messages longer than a 32kb might be cut off. This can be detected in tracing scripts by comparing the message size to the length of the passed message.
 
 #### Tracepoint `net:outbound_message`
 
-Is called when a message is send to a peer over the P2P network. Passes
-information about our peer, the connection and the message as arguments.
+Is called when a message is send to a peer over the P2P network. Passes information about our peer, the connection and the message as arguments.
 
 Arguments passed:
+
 1. Peer ID as `int64`
 2. Peer Address and Port (IPv4, IPv6, Tor v3, I2P, ...) as `pointer to C-style String` (max. length 68 characters)
 3. Connection Type (inbound, feeler, outbound-full-relay, ...) as `pointer to C-style String` (max. length 20 characters)
@@ -87,20 +67,16 @@ Arguments passed:
 5. Message Size in bytes as `uint64`
 6. Message Bytes as `pointer to unsigned chars` (i.e. bytes)
 
-Note: The message is passed to the tracepoint in full, however, due to space
-limitations in the eBPF kernel VM it might not be possible to pass the message
-to user-space in full. Messages longer than a 32kb might be cut off. This can
-be detected in tracing scripts by comparing the message size to the length of
-the passed message.
+Note: The message is passed to the tracepoint in full, however, due to space limitations in the eBPF kernel VM it might not be possible to pass the message to user-space in full. Messages longer than a 32kb might be cut off. This can be detected in tracing scripts by comparing the message size to the length of the passed message.
 
 ### Context `validation`
 
 #### Tracepoint `validation:block_connected`
 
-Is called *after* a block is connected to the chain. Can, for example, be used
-to benchmark block connections together with `-reindex`.
+Is called _after_ a block is connected to the chain. Can, for example, be used to benchmark block connections together with `-reindex`.
 
 Arguments passed:
+
 1. Block Header Hash as `pointer to unsigned chars` (i.e. 32 bytes in little-endian)
 2. Block Height as `int32`
 3. Transactions in the Block as `uint64`
@@ -112,13 +88,12 @@ Arguments passed:
 
 #### Tracepoint `utxocache:flush`
 
-Is called *after* the caches and indexes are flushed depending on the mode
-`CChainState::FlushStateToDisk` is called with.
+Is called _after_ the caches and indexes are flushed depending on the mode `CChainState::FlushStateToDisk` is called with.
 
 Arguments passed:
+
 1. Duration in microseconds as `int64`
-2. Flush state mode as `uint32`. It's an enumerator class with values `0`
-   (`NONE`), `1` (`IF_NEEDED`), `2` (`PERIODIC`), `3` (`ALWAYS`)
+2. Flush state mode as `uint32`. It's an enumerator class with values `0` (`NONE`), `1` (`IF_NEEDED`), `2` (`PERIODIC`), `3` (`ALWAYS`)
 3. Number of coins flushed as `uint64`
 4. Memory usage in bytes as `uint64`
 5. If the flush was pruned as `bool`
@@ -129,9 +104,10 @@ Arguments passed:
 It is called when a new coin is added to the UTXO cache.
 
 Arguments passed:
+
 1. Transaction ID (hash) as `pointer to unsigned chars` (i.e. 32 bytes in little-endian)
 2. Output index as `uint32`
-3. Block height the coin was added to the UTXO-set as  `uint32`
+3. Block height the coin was added to the UTXO-set as `uint32`
 4. Value of the coin as `int64`
 5. If the coin is a coinbase as `bool`
 
@@ -140,6 +116,7 @@ Arguments passed:
 It is called when a coin is spent from the UTXO cache.
 
 Arguments passed:
+
 1. Transaction ID (hash) as `pointer to unsigned chars` (i.e. 32 bytes in little-endian)
 2. Output index as `uint32`
 3. Block height the coin was spent, as `uint32`
@@ -151,22 +128,15 @@ Arguments passed:
 It is called when the UTXO with the given outpoint is removed from the cache.
 
 Arguments passed:
+
 1. Transaction ID (hash) as `pointer to unsigned chars` (i.e. 32 bytes in little-endian)
 2. Output index as `uint32`
 3. Block height the coin was uncached, as `uint32`
-4. Value of the coin as `int64`
-. If the coin is a coinbase as `bool`
+4. Value of the coin as `int64` . If the coin is a coinbase as `bool`
 
 ## Adding tracepoints to Bitcoin Core
 
-To add a new tracepoint, `#include <util/trace.h>` in the compilation unit where
-the tracepoint is inserted. Use one of the `TRACEx` macros listed below
-depending on the number of arguments passed to the tracepoint. Up to 12
-arguments can be provided. The `context` and `event` specify the names by which
-the tracepoint is referred to. Please use `snake_case` and try to make sure that
-the tracepoint names make sense even without detailed knowledge of the
-implementation details. Do not forget to update the tracepoint list in this
-document.
+To add a new tracepoint, `#include <util/trace.h>` in the compilation unit where the tracepoint is inserted. Use one of the `TRACEx` macros listed below depending on the number of arguments passed to the tracepoint. Up to 12 arguments can be provided. The `context` and `event` specify the names by which the tracepoint is referred to. Please use `snake_case` and try to make sure that the tracepoint names make sense even without detailed knowledge of the implementation details. Do not forget to update the tracepoint list in this document.
 
 ```c
 #define TRACE(context, event)
@@ -186,7 +156,7 @@ document.
 
 For example:
 
-```C++
+```
 TRACE6(net, inbound_message,
     pnode->GetId(),
     pnode->m_addr_name.c_str(),
@@ -200,60 +170,36 @@ TRACE6(net, inbound_message,
 ### Guidelines and best practices
 
 #### Clear motivation and use-case
-Tracepoints need a clear motivation and use-case. The motivation should
-outweigh the impact on, for example, code readability. There is no point in
-adding tracepoints that don't end up being used.
+
+Tracepoints need a clear motivation and use-case. The motivation should outweigh the impact on, for example, code readability. There is no point in adding tracepoints that don't end up being used.
 
 #### Provide an example
-When adding a new tracepoint, provide an example. Examples can show the use case
-and help reviewers testing that the tracepoint works as intended. The examples
-can be kept simple but should give others a starting point when working with
-the tracepoint. See existing examples in [contrib/tracing/].
 
-[contrib/tracing/]: ../contrib/tracing/
+When adding a new tracepoint, provide an example. Examples can show the use case and help reviewers testing that the tracepoint works as intended. The examples can be kept simple but should give others a starting point when working with the tracepoint. See existing examples in [contrib/tracing/](../contrib/tracing/).
 
 #### No expensive computations for tracepoints
-Data passed to the tracepoint should be inexpensive to compute. Although the
-tracepoint itself only has overhead when enabled, the code to compute arguments
-is always run - even if the tracepoint is not used. For example, avoid
-serialization and parsing.
+
+Data passed to the tracepoint should be inexpensive to compute. Although the tracepoint itself only has overhead when enabled, the code to compute arguments is always run - even if the tracepoint is not used. For example, avoid serialization and parsing.
 
 #### Semi-stable API
-Tracepoints should have a semi-stable API. Users should be able to rely on the
-tracepoints for scripting. This means tracepoints need to be documented, and the
-argument order ideally should not change. If there is an important reason to
-change argument order, make sure to document the change and update the examples
-using the tracepoint.
+
+Tracepoints should have a semi-stable API. Users should be able to rely on the tracepoints for scripting. This means tracepoints need to be documented, and the argument order ideally should not change. If there is an important reason to change argument order, make sure to document the change and update the examples using the tracepoint.
 
 #### eBPF Virtual Machine limits
-Keep the eBPF Virtual Machine limits in mind. eBPF programs receiving data from
-the tracepoints run in a sandboxed Linux kernel VM. This VM has a limited stack
-size of 512 bytes. Check if it makes sense to pass larger amounts of data, for
-example, with a tracing script that can handle the passed data.
+
+Keep the eBPF Virtual Machine limits in mind. eBPF programs receiving data from the tracepoints run in a sandboxed Linux kernel VM. This VM has a limited stack size of 512 bytes. Check if it makes sense to pass larger amounts of data, for example, with a tracing script that can handle the passed data.
 
 #### `bpftrace` argument limit
-While tracepoints can have up to 12 arguments, bpftrace scripts currently only
-support reading from the first six arguments (`arg0` till `arg5`) on `x86_64`.
-bpftrace currently lacks real support for handling and printing binary data,
-like block header hashes and txids. When a tracepoint passes more than six
-arguments, then string and integer arguments should preferably be placed in the
-first six argument fields. Binary data can be placed in later arguments. The BCC
-supports reading from all 12 arguments.
+
+While tracepoints can have up to 12 arguments, bpftrace scripts currently only support reading from the first six arguments (`arg0` till `arg5`) on `x86_64`. bpftrace currently lacks real support for handling and printing binary data, like block header hashes and txids. When a tracepoint passes more than six arguments, then string and integer arguments should preferably be placed in the first six argument fields. Binary data can be placed in later arguments. The BCC supports reading from all 12 arguments.
 
 #### Strings as C-style String
-Generally, strings should be passed into the `TRACEx` macros as pointers to
-C-style strings (a null-terminated sequence of characters). For C++
-`std::strings`, [`c_str()`]  can be used. It's recommended to document the
-maximum expected string size if known.
 
-
-[`c_str()`]: https://www.cplusplus.com/reference/string/string/c_str/
-
+Generally, strings should be passed into the `TRACEx` macros as pointers to C-style strings (a null-terminated sequence of characters). For C++ `std::strings`, [`c_str()`](https://www.cplusplus.com/reference/string/string/c_str/) can be used. It's recommended to document the maximum expected string size if known.
 
 ## Listing available tracepoints
 
-Multiple tools can list the available tracepoints in a `bitcoind` binary with
-USDT support.
+Multiple tools can list the available tracepoints in a `bitcoind` binary with USDT support.
 
 ### GDB - GNU Project Debugger
 
@@ -272,8 +218,7 @@ stap validation block_connected  0x00000000002fb10c /src/bitcoind
 
 ### With `readelf`
 
-The `readelf` tool can be used to display the USDT tracepoints in Bitcoin Core.
-Look for the notes with the description `NT_STAPSDT`.
+The `readelf` tool can be used to display the USDT tracepoints in Bitcoin Core. Look for the notes with the description `NT_STAPSDT`.
 
 ```
 $ readelf -n ./src/bitcoind | grep NT_STAPSDT -A 4 -B 2
@@ -289,15 +234,7 @@ Displaying notes found in: .note.stapsdt
 
 ### With `tplist`
 
-The `tplist` tool is provided by BCC (see [Installing BCC]). It displays kernel
-tracepoints or USDT probes and their formats (for more information, see the
-[`tplist` usage demonstration]). There are slight binary naming differences
-between distributions. For example, on
-[Ubuntu the binary is called `tplist-bpfcc`][ubuntu binary].
-
-[Installing BCC]: https://github.com/iovisor/bcc/blob/master/INSTALL.md
-[`tplist` usage demonstration]: https://github.com/iovisor/bcc/blob/master/tools/tplist_example.txt
-[ubuntu binary]: https://github.com/iovisor/bcc/blob/master/INSTALL.md#ubuntu---binary
+The `tplist` tool is provided by BCC (see [Installing BCC](https://github.com/iovisor/bcc/blob/master/INSTALL.md)). It displays kernel tracepoints or USDT probes and their formats (for more information, see the [`tplist` usage demonstration](https://github.com/iovisor/bcc/blob/master/tools/tplist_example.txt)). There are slight binary naming differences between distributions. For example, on [Ubuntu the binary is called `tplist-bpfcc`](https://github.com/iovisor/bcc/blob/master/INSTALL.md#ubuntu---binary).
 
 ```
 $ tplist -l ./src/bitcoind -v

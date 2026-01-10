@@ -10,7 +10,7 @@ When using a hardware wallet, consult the manufacturer website for (alternative)
 
 Start Bitcoin Core:
 
-```sh
+```
 $ bitcoind -signer=../HWI/hwi.py
 ```
 
@@ -36,7 +36,7 @@ The master key fingerprint is used to identify a device.
 
 Create a wallet, this automatically imports the public keys:
 
-```sh
+```
 $ bitcoin-cli createwallet "hww" true true "" true true true
 ```
 
@@ -44,7 +44,7 @@ $ bitcoin-cli createwallet "hww" true true "" true true true
 
 Display an address on the device:
 
-```sh
+```
 $ bitcoin-cli -rpcwallet=<wallet> getnewaddress
 $ bitcoin-cli -rpcwallet=<wallet> walletdisplayaddress <address>
 ```
@@ -55,14 +55,13 @@ Replace `<address>` with the result of `getnewaddress`.
 
 Under the hood this uses a [Partially Signed Bitcoin Transaction](psbt.md).
 
-```sh
+```
 $ bitcoin-cli -rpcwallet=<wallet> sendtoaddress <address> <amount>
 ```
 
-This prompts your hardware wallet to sign, and fail if it's not connected. If successful
-it automatically broadcasts the transaction.
+This prompts your hardware wallet to sign, and fail if it's not connected. If successful it automatically broadcasts the transaction.
 
-```sh
+```
 {"complete": true, "txid": <txid>}
 ```
 
@@ -71,12 +70,14 @@ it automatically broadcasts the transaction.
 In order to be compatible with Bitcoin Core any signer command should conform to the specification below. This specification is subject to change. Ideally a BIP should propose a standard so that other wallets can also make use of it.
 
 Prerequisite knowledge:
+
 * [Output Descriptors](descriptors.md)
 * Partially Signed Bitcoin Transaction ([PSBT](psbt.md))
 
 ### `enumerate` (required)
 
 Usage:
+
 ```
 $ <cmd> enumerate
 [
@@ -95,6 +96,7 @@ A future extension could add an optional return field `reachable`, in case `<cmd
 ### `signtransaction` (required)
 
 Usage:
+
 ```
 $ <cmd> --fingerprint=<fingerprint> (--testnet) signtransaction <psbt>
 base64_encode_signed_psbt
@@ -138,6 +140,7 @@ $ <cmd> --fingerprint=00000000 --testnet getdescriptors
 ### `displayaddress` (optional)
 
 Usage:
+
 ```
 <cmd> --fingerprint=<fingerprint> (--testnet) displayaddress --desc descriptor
 ```
@@ -150,9 +153,9 @@ Example, display the first native SegWit receive address on Testnet:
 
 The command MUST be able to figure out the address type from the descriptor.
 
-If <descriptor> contains a master key fingerprint, the command MUST fail if it does not match the fingerprint known by the device.
+If contains a master key fingerprint, the command MUST fail if it does not match the fingerprint known by the device.
 
-If <descriptor> contains an xpub, the command MUST fail if it does not match the xpub known by the device.
+If contains an xpub, the command MUST fail if it does not match the xpub known by the device.
 
 The command MAY complain if `--testnet` is set, but the BIP32 coin type is not `1h` (and vice versa).
 

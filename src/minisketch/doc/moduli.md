@@ -1,65 +1,67 @@
-These are the irreducible polynomials over *GF(2)* used to represent field elements:
+# moduli
 
-* *x<sup>2</sup> + x + 1*
-* *x<sup>3</sup> + x + 1*
-* *x<sup>4</sup> + x + 1*
-* *x<sup>5</sup> + x<sup>2</sup> + 1*
-* *x<sup>6</sup> + x + 1*
-* *x<sup>7</sup> + x + 1*
-* *x<sup>8</sup> + x<sup>4</sup> + x<sup>3</sup> + x + 1*
-* *x<sup>9</sup> + x + 1*
-* *x<sup>10</sup> + x<sup>3</sup> + 1*
-* *x<sup>11</sup> + x<sup>2</sup> + 1*
-* *x<sup>12</sup> + x<sup>3</sup> + 1*
-* *x<sup>13</sup> + x<sup>4</sup> + x<sup>3</sup> + x + 1*
-* *x<sup>14</sup> + x<sup>5</sup> + 1*
-* *x<sup>15</sup> + x + 1*
-* *x<sup>16</sup> + x<sup>5</sup> + x<sup>3</sup> + x + 1*
-* *x<sup>17</sup> + x<sup>3</sup> + 1*
-* *x<sup>18</sup> + x<sup>3</sup> + 1*
-* *x<sup>19</sup> + x<sup>5</sup> + x<sup>2</sup> + x + 1*
-* *x<sup>20</sup> + x<sup>3</sup> + 1*
-* *x<sup>21</sup> + x<sup>2</sup> + 1*
-* *x<sup>22</sup> + x + 1*
-* *x<sup>23</sup> + x<sup>5</sup> + 1*
-* *x<sup>24</sup> + x<sup>4</sup> + x<sup>3</sup> + x + 1*
-* *x<sup>25</sup> + x<sup>3</sup> + 1*
-* *x<sup>26</sup> + x<sup>4</sup> + x<sup>3</sup> + x + 1*
-* *x<sup>27</sup> + x<sup>5</sup> + x<sup>2</sup> + x + 1*
-* *x<sup>28</sup> + x + 1*
-* *x<sup>29</sup> + x<sup>2</sup> + 1*
-* *x<sup>30</sup> + x + 1*
-* *x<sup>31</sup> + x<sup>3</sup> + 1*
-* *x<sup>32</sup> + x<sup>7</sup> + x<sup>3</sup> + x<sup>2</sup> + 1*
-* *x<sup>33</sup> + x<sup>10</sup> + 1*
-* *x<sup>34</sup> + x<sup>7</sup> + 1*
-* *x<sup>35</sup> + x<sup>2</sup> + 1*
-* *x<sup>36</sup> + x<sup>9</sup> + 1*
-* *x<sup>37</sup> + x<sup>6</sup> + x<sup>4</sup> + x + 1*
-* *x<sup>38</sup> + x<sup>6</sup> + x<sup>5</sup> + x + 1*
-* *x<sup>39</sup> + x<sup>4</sup> + 1*
-* *x<sup>40</sup> + x<sup>5</sup> + x<sup>4</sup> + x<sup>3</sup> + 1*
-* *x<sup>41</sup> + x<sup>3</sup> + 1*
-* *x<sup>42</sup> + x<sup>7</sup> + 1*
-* *x<sup>43</sup> + x<sup>6</sup> + x<sup>4</sup> + x<sup>3</sup> + 1*
-* *x<sup>44</sup> + x<sup>5</sup> + 1*
-* *x<sup>45</sup> + x<sup>4</sup> + x<sup>3</sup> + x + 1*
-* *x<sup>46</sup> + x + 1*
-* *x<sup>47</sup> + x<sup>5</sup> + 1*
-* *x<sup>48</sup> + x<sup>5</sup> + x<sup>3</sup> + x<sup>2</sup> + 1*
-* *x<sup>49</sup> + x<sup>9</sup> + 1*
-* *x<sup>50</sup> + x<sup>4</sup> + x<sup>3</sup> + x<sup>2</sup> + 1*
-* *x<sup>51</sup> + x<sup>6</sup> + x<sup>3</sup> + x + 1*
-* *x<sup>52</sup> + x<sup>3</sup> + 1*
-* *x<sup>53</sup> + x<sup>6</sup> + x<sup>2</sup> + x + 1*
-* *x<sup>54</sup> + x<sup>9</sup> + 1*
-* *x<sup>55</sup> + x<sup>7</sup> + 1*
-* *x<sup>56</sup> + x<sup>7</sup> + x<sup>4</sup> + x<sup>2</sup> + 1*
-* *x<sup>57</sup> + x<sup>4</sup> + 1*
-* *x<sup>58</sup> + x<sup>19</sup> + 1*
-* *x<sup>59</sup> + x<sup>7</sup> + x<sup>4</sup> + x<sup>2</sup> + 1*
-* *x<sup>60</sup> + x + 1*
-* *x<sup>61</sup> + x<sup>5</sup> + x<sup>2</sup> + x + 1*
-* *x<sup>62</sup> + x<sup>29</sup> + 1*
-* *x<sup>63</sup> + x + 1*
-* *x<sup>64</sup> + x<sup>4</sup> + x<sup>3</sup> + x + 1*
+These are the irreducible polynomials over _GF(2)_ used to represent field elements:
+
+* _x2 + x + 1_
+* _x3 + x + 1_
+* _x4 + x + 1_
+* _x5 + x2 + 1_
+* _x6 + x + 1_
+* _x7 + x + 1_
+* _x8 + x4 + x3 + x + 1_
+* _x9 + x + 1_
+* _x10 + x3 + 1_
+* _x11 + x2 + 1_
+* _x12 + x3 + 1_
+* _x13 + x4 + x3 + x + 1_
+* _x14 + x5 + 1_
+* _x15 + x + 1_
+* _x16 + x5 + x3 + x + 1_
+* _x17 + x3 + 1_
+* _x18 + x3 + 1_
+* _x19 + x5 + x2 + x + 1_
+* _x20 + x3 + 1_
+* _x21 + x2 + 1_
+* _x22 + x + 1_
+* _x23 + x5 + 1_
+* _x24 + x4 + x3 + x + 1_
+* _x25 + x3 + 1_
+* _x26 + x4 + x3 + x + 1_
+* _x27 + x5 + x2 + x + 1_
+* _x28 + x + 1_
+* _x29 + x2 + 1_
+* _x30 + x + 1_
+* _x31 + x3 + 1_
+* _x32 + x7 + x3 + x2 + 1_
+* _x33 + x10 + 1_
+* _x34 + x7 + 1_
+* _x35 + x2 + 1_
+* _x36 + x9 + 1_
+* _x37 + x6 + x4 + x + 1_
+* _x38 + x6 + x5 + x + 1_
+* _x39 + x4 + 1_
+* _x40 + x5 + x4 + x3 + 1_
+* _x41 + x3 + 1_
+* _x42 + x7 + 1_
+* _x43 + x6 + x4 + x3 + 1_
+* _x44 + x5 + 1_
+* _x45 + x4 + x3 + x + 1_
+* _x46 + x + 1_
+* _x47 + x5 + 1_
+* _x48 + x5 + x3 + x2 + 1_
+* _x49 + x9 + 1_
+* _x50 + x4 + x3 + x2 + 1_
+* _x51 + x6 + x3 + x + 1_
+* _x52 + x3 + 1_
+* _x53 + x6 + x2 + x + 1_
+* _x54 + x9 + 1_
+* _x55 + x7 + 1_
+* _x56 + x7 + x4 + x2 + 1_
+* _x57 + x4 + 1_
+* _x58 + x19 + 1_
+* _x59 + x7 + x4 + x2 + 1_
+* _x60 + x + 1_
+* _x61 + x5 + x2 + x + 1_
+* _x62 + x29 + 1_
+* _x63 + x + 1_
+* _x64 + x4 + x3 + x + 1_

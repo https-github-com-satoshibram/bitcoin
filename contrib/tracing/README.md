@@ -1,66 +1,29 @@
-Example scripts for User-space, Statically Defined Tracing (USDT)
-=================================================================
+# Example scripts for User-space, Statically Defined Tracing (USDT)
 
-This directory contains scripts showcasing User-space, Statically Defined
-Tracing (USDT) support for Bitcoin Core on Linux using. For more information on
-USDT support in Bitcoin Core see the [USDT documentation].
+This directory contains scripts showcasing User-space, Statically Defined Tracing (USDT) support for Bitcoin Core on Linux using. For more information on USDT support in Bitcoin Core see the [USDT documentation](../../doc/tracing.md).
 
-[USDT documentation]: ../../doc/tracing.md
+Examples for the two main eBPF front-ends, [bpftrace](https://github.com/iovisor/bpftrace) and [BPF Compiler Collection (BCC)](https://github.com/iovisor/bcc), with support for USDT, are listed. BCC is used for complex tools and daemons and `bpftrace` is preferred for one-liners and shorter scripts.
 
-
-Examples for the two main eBPF front-ends, [bpftrace] and
-[BPF Compiler Collection (BCC)], with support for USDT, are listed. BCC is used
-for complex tools and daemons and `bpftrace` is preferred for one-liners and
-shorter scripts.
-
-[bpftrace]: https://github.com/iovisor/bpftrace
-[BPF Compiler Collection (BCC)]: https://github.com/iovisor/bcc
-
-
-To develop and run bpftrace and BCC scripts you need to install the
-corresponding packages. See [installing bpftrace] and [installing BCC] for more
-information. For development there exist a [bpftrace Reference Guide], a
-[BCC Reference Guide], and a [bcc Python Developer Tutorial].
-
-[installing bpftrace]: https://github.com/iovisor/bpftrace/blob/master/INSTALL.md
-[installing BCC]: https://github.com/iovisor/bcc/blob/master/INSTALL.md
-[bpftrace Reference Guide]: https://github.com/iovisor/bpftrace/blob/master/docs/reference_guide.md
-[BCC Reference Guide]: https://github.com/iovisor/bcc/blob/master/docs/reference_guide.md
-[bcc Python Developer Tutorial]: https://github.com/iovisor/bcc/blob/master/docs/tutorial_bcc_python_developer.md
+To develop and run bpftrace and BCC scripts you need to install the corresponding packages. See [installing bpftrace](https://github.com/iovisor/bpftrace/blob/master/INSTALL.md) and [installing BCC](https://github.com/iovisor/bcc/blob/master/INSTALL.md) for more information. For development there exist a [bpftrace Reference Guide](https://github.com/iovisor/bpftrace/blob/master/docs/reference_guide.md), a [BCC Reference Guide](https://github.com/iovisor/bcc/blob/master/docs/reference_guide.md), and a [bcc Python Developer Tutorial](https://github.com/iovisor/bcc/blob/master/docs/tutorial_bcc_python_developer.md).
 
 ## Examples
 
-The bpftrace examples contain a relative path to the `bitcoind` binary. By
-default, the scripts should be run from the repository-root and assume a
-self-compiled `bitcoind` binary. The paths in the examples can be changed, for
-example, to point to release builds if needed. See the
-[Bitcoin Core USDT documentation] on how to list available tracepoints in your
-`bitcoind` binary.
+The bpftrace examples contain a relative path to the `bitcoind` binary. By default, the scripts should be run from the repository-root and assume a self-compiled `bitcoind` binary. The paths in the examples can be changed, for example, to point to release builds if needed. See the [Bitcoin Core USDT documentation](../../doc/tracing.md#listing-available-tracepoints) on how to list available tracepoints in your `bitcoind` binary.
 
-[Bitcoin Core USDT documentation]: ../../doc/tracing.md#listing-available-tracepoints
+**WARNING: eBPF programs require root privileges to be loaded into a Linux kernel VM. This means the bpftrace and BCC examples must be executed with root privileges. Make sure to carefully review any scripts that you run with root privileges first!**
 
-**WARNING: eBPF programs require root privileges to be loaded into a Linux
-kernel VM. This means the bpftrace and BCC examples must be executed with root
-privileges. Make sure to carefully review any scripts that you run with root
-privileges first!**
+### log\_p2p\_traffic.bt
 
-### log_p2p_traffic.bt
+A bpftrace script logging information about inbound and outbound P2P network messages. Based on the `net:inbound_message` and `net:outbound_message` tracepoints.
 
-A bpftrace script logging information about inbound and outbound P2P network
-messages. Based on the `net:inbound_message` and `net:outbound_message`
-tracepoints.
-
-By default, `bpftrace` limits strings to 64 bytes due to the limited stack size
-in the eBPF VM. For example, Tor v3 addresses exceed the string size limit which
-results in the port being cut off during logging. The string size limit can be
-increased with the `BPFTRACE_STRLEN` environment variable (`BPFTRACE_STRLEN=70`
-works fine).
+By default, `bpftrace` limits strings to 64 bytes due to the limited stack size in the eBPF VM. For example, Tor v3 addresses exceed the string size limit which results in the port being cut off during logging. The string size limit can be increased with the `BPFTRACE_STRLEN` environment variable (`BPFTRACE_STRLEN=70` works fine).
 
 ```
 $ bpftrace contrib/tracing/log_p2p_traffic.bt
 ```
 
 Output
+
 ```
 outbound 'ping' msg to peer 11 (outbound-full-relay, [2a02:b10c:f747:1:ef:fake:ipv6:addr]:8333) with 8 bytes
 inbound 'pong' msg from peer 11 (outbound-full-relay, [2a02:b10c:f747:1:ef:fake:ipv6:addr]:8333) with 8 bytes
@@ -72,20 +35,18 @@ outbound 'inv' msg to peer 7 (outbound-full-relay, XX.XX.XXX.242:8333) with 37 b
 …
 ```
 
-### p2p_monitor.py
+### p2p\_monitor.py
 
-A BCC Python script using curses for an interactive P2P message monitor. Based
-on the `net:inbound_message` and `net:outbound_message` tracepoints.
+A BCC Python script using curses for an interactive P2P message monitor. Based on the `net:inbound_message` and `net:outbound_message` tracepoints.
 
-Inbound and outbound traffic is listed for each peer together with information
-about the connection. Peers can be selected individually to view recent P2P
-messages.
+Inbound and outbound traffic is listed for each peer together with information about the connection. Peers can be selected individually to view recent P2P messages.
 
 ```
 $ python3 contrib/tracing/p2p_monitor.py ./src/bitcoind
 ```
 
 Lists selectable peers and traffic and connection information.
+
 ```
  P2P Message Monitor
  Navigate with UP/DOWN or J/K and select a peer with ENTER or SPACE to see individual P2P messages
@@ -125,29 +86,15 @@ Showing recent P2P messages between our node and a selected peer.
     |                                            <--- addr (30003 bytes) |
     | inv (1261 byte) --->                                               |
     |                                 …                                  |
-
 ```
 
-### log_raw_p2p_msgs.py
+### log\_raw\_p2p\_msgs.py
 
-A BCC Python script showcasing eBPF and USDT limitations when passing data
-larger than about 32kb. Based on the `net:inbound_message` and
-`net:outbound_message` tracepoints.
+A BCC Python script showcasing eBPF and USDT limitations when passing data larger than about 32kb. Based on the `net:inbound_message` and `net:outbound_message` tracepoints.
 
-Bitcoin P2P messages can be larger than 32kb (e.g. `tx`, `block`, ...). The
-eBPF VM's stack is limited to 512 bytes, and we can't allocate more than about
-32kb for a P2P message in the eBPF VM. The **message data is cut off** when the
-message is larger than MAX_MSG_DATA_LENGTH (see script). This can be detected
-in user-space by comparing the data length to the message length variable. The
-message is cut off when the data length is smaller than the message length.
-A warning is included with the printed message data.
+Bitcoin P2P messages can be larger than 32kb (e.g. `tx`, `block`, ...). The eBPF VM's stack is limited to 512 bytes, and we can't allocate more than about 32kb for a P2P message in the eBPF VM. The **message data is cut off** when the message is larger than MAX\_MSG\_DATA\_LENGTH (see script). This can be detected in user-space by comparing the data length to the message length variable. The message is cut off when the data length is smaller than the message length. A warning is included with the printed message data.
 
-Data is submitted to user-space (i.e. to this script) via a ring buffer. The
-throughput of the ring buffer is limited. Each p2p_message is about 32kb in
-size. In- or outbound messages submitted to the ring buffer in rapid
-succession fill the ring buffer faster than it can be read. Some messages are
-lost. BCC prints: `Possibly lost 2 samples` on lost messages.
-
+Data is submitted to user-space (i.e. to this script) via a ring buffer. The throughput of the ring buffer is limited. Each p2p\_message is about 32kb in size. In- or outbound messages submitted to the ring buffer in rapid succession fill the ring buffer faster than it can be read. Some messages are lost. BCC prints: `Possibly lost 2 samples` on lost messages.
 
 ```
 $ python3 contrib/tracing/log_raw_p2p_msgs.py ./src/bitcoind
@@ -164,34 +111,26 @@ Warning: incomplete message (only 32568 out of 53552 bytes)! inbound msg 'tx' fr
 Possibly lost 2 samples
 ```
 
-### connectblock_benchmark.bt
+### connectblock\_benchmark.bt
 
-A `bpftrace` script to benchmark the `ConnectBlock()` function during, for
-example, a blockchain re-index. Based on the `validation:block_connected` USDT
-tracepoint.
+A `bpftrace` script to benchmark the `ConnectBlock()` function during, for example, a blockchain re-index. Based on the `validation:block_connected` USDT tracepoint.
 
-The script takes three positional arguments. The first two arguments, the start,
-and end height indicate between which blocks the benchmark should be run. The
-third acts as a duration threshold in milliseconds. When the `ConnectBlock()`
-function takes longer than the threshold, information about the block, is
-printed. For more details, see the header comment in the script.
+The script takes three positional arguments. The first two arguments, the start, and end height indicate between which blocks the benchmark should be run. The third acts as a duration threshold in milliseconds. When the `ConnectBlock()` function takes longer than the threshold, information about the block, is printed. For more details, see the header comment in the script.
 
-The following command can be used to benchmark, for example, `ConnectBlock()`
-between height 20000 and 38000 on SigNet while logging all blocks that take
-longer than 25ms to connect.
+The following command can be used to benchmark, for example, `ConnectBlock()` between height 20000 and 38000 on SigNet while logging all blocks that take longer than 25ms to connect.
 
 ```
 $ bpftrace contrib/tracing/connectblock_benchmark.bt 20000 38000 25
 ```
 
-In a different terminal, starting Bitcoin Core in SigNet mode and with
-re-indexing enabled.
+In a different terminal, starting Bitcoin Core in SigNet mode and with re-indexing enabled.
 
 ```
 $ ./src/bitcoind -signet -reindex
 ```
 
 This produces the following output.
+
 ```
 Attaching 5 probes...
 ConnectBlock Benchmark between height 20000 and 38000 inclusive
@@ -235,10 +174,9 @@ Histogram of block connection times in milliseconds (ms).
 [32, 64)               4 |                                                    |
 ```
 
-### log_utxocache_flush.py
+### log\_utxocache\_flush.py
 
-A BCC Python script to log the cache and index flushes. Based on the
-`utxocache:flush` tracepoint.
+A BCC Python script to log the cache and index flushes. Based on the `utxocache:flush` tracepoint.
 
 ```bash
 $ python3 contrib/tracing/log_utxocache_flush.py ./src/bitcoind
@@ -265,11 +203,9 @@ Duration (µs)   Mode       Coins Count     Memory Usage    Prune    Full Flush
 7463            ALWAYS     0               245.84 kB       False    False
 ```
 
-### log_utxos.bt
+### log\_utxos.bt
 
-A `bpftrace` script to log information about the coins that are added, spent, or
-uncached from the UTXO set. Based on the `utxocache:add`, `utxocache:spend` and
-`utxocache:uncache` tracepoints.
+A `bpftrace` script to log information about the coins that are added, spent, or uncached from the UTXO set. Based on the `utxocache:add`, `utxocache:spend` and `utxocache:uncache` tracepoints.
 
 ```bash
 $ bpftrace contrib/tracing/log_utxos.bt
